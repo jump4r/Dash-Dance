@@ -11,16 +11,20 @@ public class ContinuousMovement : MonoBehaviour
     public XRNode secondaryInputSource;
     public float speed = 1f;
     public float gravity = -9.81f;
-    public float fallingSpeed = 0;
+    public float verticalVelocity = 0;
     public float additionalHeight = 0.2f;
-    public float jumpForce = 3f;
+    public float jumpForce = 10f;
     public float rotationDegree = 45f;
 
+    private Vector3 frameMovement;
     private XRRig rig;
     private Vector2 inputAxis;
     private Vector2 secondaryInputAxis;
+    private bool jumpButton;
+    
     private CharacterController character;
     private bool readyToSnapTurn = true;
+    
     
     // Start is called before the first frame update
     void Start()
@@ -37,26 +41,39 @@ public class ContinuousMovement : MonoBehaviour
 
         device.TryGetFeatureValue(CommonUsages.primary2DAxis, out inputAxis);
         secondaryDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out secondaryInputAxis);
+        secondaryDevice.TryGetFeatureValue(CommonUsages.primaryButton, out jumpButton);
     }
 
     private void FixedUpdate()
     {
+        frameMovement = Vector3.zero;
+
         // Capsule follows the headset if player moves in real life
         CapsuleFollowHeadset();
 
         Quaternion headYaw = Quaternion.Euler(0, rig.cameraGameObject.transform.eulerAngles.y, 0);
         Vector3 direction = headYaw * new Vector3(inputAxis.x, 0, inputAxis.y);
-        character.Move(direction * Time.deltaTime * speed);
+        
+        frameMovement += direction * Time.deltaTime * speed;
 
-        // Gravity Interaction
+        // Calculate Vertical Velocity
         if (CheckIsGrounded())
         {
-            fallingSpeed = 0f;
+            verticalVelocity = 0f;
         } else {
-            fallingSpeed += gravity * Time.fixedDeltaTime;
+            verticalVelocity += gravity * Time.fixedDeltaTime;
         }
 
-        character.Move(Vector3.up * fallingSpeed * Time.fixedDeltaTime);
+        if (CheckIsGrounded() && jumpButton)
+        {
+            verticalVelocity += jumpForce;
+        }
+
+        frameMovement += new Vector3(0, verticalVelocity, 0);
+
+        character.Move(frameMovement);
+
+        // Handle Rotation
         RotateCharacter();
     }
 

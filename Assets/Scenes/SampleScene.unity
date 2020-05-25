@@ -1462,9 +1462,10 @@ MonoBehaviour:
   secondaryInputSource: 5
   speed: 1
   gravity: -9.81
-  fallingSpeed: 0
+  verticalVelocity: 0
   additionalHeight: 0.2
-  jumpForce: 3
+  jumpForce: 5
+  rotationDegree: 45
 --- !u!114 &1099901677
 MonoBehaviour:
   m_ObjectHideFlags: 0
