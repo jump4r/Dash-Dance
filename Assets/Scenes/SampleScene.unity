@@ -411,6 +411,8 @@ GameObject:
   - component: {fileID: 123109697}
   - component: {fileID: 123109699}
   - component: {fileID: 123109698}
+  - component: {fileID: 123109700}
+  - component: {fileID: 123109701}
   m_Layer: 0
   m_Name: RightHand
   m_TagString: Untagged
@@ -444,7 +446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae26e19cd956134bbdf3c6f65bf393a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UpdateTrackingType: 0
+  m_UpdateTrackingType: 1
   m_EnableInputActions: 1
   m_PoseProvider: {fileID: 0}
   m_ControllerNode: 5
@@ -523,6 +525,32 @@ MonoBehaviour:
   m_PlayHapticsOnHoverExit: 0
   m_HapticHoverExitIntensity: 0
   m_HapticHoverExitDuration: 0
+--- !u!114 &123109700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123109695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71836bd6bbd004942be19dccc469e695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+--- !u!114 &123109701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123109695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84ab134735ad2a24e82950f4ba33b68b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementManager: {fileID: 1099901676}
 --- !u!1 &352426991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1388,6 +1416,7 @@ GameObject:
   - component: {fileID: 1099901677}
   - component: {fileID: 1099901676}
   - component: {fileID: 1099901675}
+  - component: {fileID: 1099901678}
   m_Layer: 0
   m_Name: VR Rig
   m_TagString: Untagged
@@ -1421,7 +1450,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1099901672}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.746, y: 0.4, z: -8.198}
+  m_LocalPosition: {x: -4.68, y: 0.4, z: -8.198}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 492778048}
@@ -1461,10 +1490,10 @@ MonoBehaviour:
   inputSource: 4
   secondaryInputSource: 5
   speed: 1
-  gravity: -9.81
+  gravity: -1
   verticalVelocity: 0
   additionalHeight: 0.2
-  jumpForce: 5
+  jumpForce: 0.2
   rotationDegree: 45
 --- !u!114 &1099901677
 MonoBehaviour:
@@ -1480,6 +1509,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Timeout: 10
   m_XRRig: {fileID: 0}
+--- !u!114 &1099901678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099901672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e8d911639def214594fcd652082b06e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1292009477
 GameObject:
   m_ObjectHideFlags: 0
@@ -1788,6 +1829,8 @@ GameObject:
   - component: {fileID: 1595631097}
   - component: {fileID: 1595631099}
   - component: {fileID: 1595631098}
+  - component: {fileID: 1595631100}
+  - component: {fileID: 1595631101}
   m_Layer: 0
   m_Name: LeftHand
   m_TagString: Untagged
@@ -1821,7 +1864,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae26e19cd956134bbdf3c6f65bf393a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UpdateTrackingType: 0
+  m_UpdateTrackingType: 1
   m_EnableInputActions: 1
   m_PoseProvider: {fileID: 0}
   m_ControllerNode: 4
@@ -1900,6 +1943,32 @@ MonoBehaviour:
   m_PlayHapticsOnHoverExit: 0
   m_HapticHoverExitIntensity: 0
   m_HapticHoverExitDuration: 0
+--- !u!114 &1595631100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1595631095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71836bd6bbd004942be19dccc469e695, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 0}
+--- !u!114 &1595631101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1595631095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84ab134735ad2a24e82950f4ba33b68b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementManager: {fileID: 1099901676}
 --- !u!1 &1603412959
 GameObject:
   m_ObjectHideFlags: 0

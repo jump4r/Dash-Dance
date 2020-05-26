@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
+// Moves Player
 public class ContinuousMovement : MonoBehaviour
 {
 
@@ -46,6 +47,11 @@ public class ContinuousMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (Player.instance.moveState == PlayerMoveState.CLIMBING)
+        {
+            return;
+        }
+
         frameMovement = Vector3.zero;
 
         // Capsule follows the headset if player moves in real life
@@ -56,7 +62,7 @@ public class ContinuousMovement : MonoBehaviour
         
         frameMovement += direction * Time.deltaTime * speed;
 
-        // Calculate Vertical Velocity
+        // Calculate Vertical Velocity Due to Gravity
         if (CheckIsGrounded())
         {
             verticalVelocity = 0f;
@@ -64,6 +70,7 @@ public class ContinuousMovement : MonoBehaviour
             verticalVelocity += gravity * Time.fixedDeltaTime;
         }
 
+        // Handle Jump
         if (CheckIsGrounded() && jumpButton)
         {
             verticalVelocity += jumpForce;
@@ -71,9 +78,8 @@ public class ContinuousMovement : MonoBehaviour
 
         frameMovement += new Vector3(0, verticalVelocity, 0);
 
+        // Move and Rotate Character
         character.Move(frameMovement);
-
-        // Handle Rotation
         RotateCharacter();
     }
 
