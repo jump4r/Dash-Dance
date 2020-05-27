@@ -446,7 +446,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae26e19cd956134bbdf3c6f65bf393a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UpdateTrackingType: 1
+  m_UpdateTrackingType: 0
   m_EnableInputActions: 1
   m_PoseProvider: {fileID: 0}
   m_ControllerNode: 5
@@ -550,7 +550,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84ab134735ad2a24e82950f4ba33b68b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 0}
   movementManager: {fileID: 1099901676}
+  characterController: {fileID: 1099901675}
 --- !u!1 &352426991
 GameObject:
   m_ObjectHideFlags: 0
@@ -1495,6 +1497,7 @@ MonoBehaviour:
   additionalHeight: 0.2
   jumpForce: 0.2
   rotationDegree: 45
+  character: {fileID: 0}
 --- !u!114 &1099901677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1864,7 +1867,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ae26e19cd956134bbdf3c6f65bf393a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UpdateTrackingType: 1
+  m_UpdateTrackingType: 0
   m_EnableInputActions: 1
   m_PoseProvider: {fileID: 0}
   m_ControllerNode: 4
@@ -1968,7 +1971,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84ab134735ad2a24e82950f4ba33b68b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controller: {fileID: 0}
   movementManager: {fileID: 1099901676}
+  characterController: {fileID: 1099901675}
 --- !u!1 &1603412959
 GameObject:
   m_ObjectHideFlags: 0

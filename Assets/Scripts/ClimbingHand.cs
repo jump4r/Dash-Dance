@@ -6,14 +6,20 @@ using UnityEngine.XR.Interaction.Toolkit;
 public class ClimbingHand : MonoBehaviour
 {
 
+    [SerializeField]
     private XRController controller; 
     
     [SerializeField]
     private ContinuousMovement movementManager;
+    [SerializeField]
+    private CharacterController characterController;
 
     // The position character was at when the grab was executed
     private Vector3 initialGrabPosition = Vector3.zero;
+    private Vector3 lastPosition = Vector3.zero;
+    public Vector3 delta { get; private set; } = Vector3.zero;
     private bool initialGrabFrame = true;
+    private bool isPressed = false;
 
     // Start is called before the first frame update
     void Start()
@@ -22,33 +28,42 @@ public class ClimbingHand : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         bool pressed = false;
         controller.inputDevice.IsPressed(controller.selectUsage, out pressed);
+        lastPosition = transform.localPosition;
         
         if (pressed)
         {
             if (initialGrabFrame) 
             {
+                movementManager.SetClimbingHand(this);
                 initialGrabFrame = false;
-                initialGrabPosition = movementManager.transform.position;
+                initialGrabPosition = transform.localPosition;
+                isPressed = true;
+
+
             }
-            // Ideally this should be line piece of code, but I need to let the 
-            controller.climbing = true;
             Player.instance.SetMoveState(PlayerMoveState.CLIMBING);
+        }
 
-            movementManager.transform.position += controller.handPositionDelta;
-
-            Debug.Log("New Movement Manager Position: " + movementManager.transform.position);
-            Debug.Log("Hnd Delta" + controller.handPositionDelta);
+        bool released = !pressed && isPressed;
+        if (released)
+        {
+            movementManager.ClearClimbingHand();
+            isPressed = false;
         }
 
         else 
         {
-            controller.climbing = false;
             Player.instance.SetMoveState(PlayerMoveState.IDLE);
             initialGrabFrame = true;
         }
+    }
+
+    void LateUpdate() 
+    {
+        delta = transform.localPosition - lastPosition;
     }
 }

@@ -29,5 +29,6 @@ public class Player : MonoBehaviour
     public void SetMoveState(PlayerMoveState newState)
     {
         moveState = newState;
+        Debug.Log("Set Player move state on instance");
     }
 }

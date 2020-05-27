@@ -23,8 +23,12 @@ public class ContinuousMovement : MonoBehaviour
     private Vector2 secondaryInputAxis;
     private bool jumpButton;
     
-    private CharacterController character;
+    public CharacterController character;
     private bool readyToSnapTurn = true;
+
+    // Climbing
+    [SerializeField]
+    private ClimbingHand climbingHand;
     
     
     // Start is called before the first frame update
@@ -47,8 +51,9 @@ public class ContinuousMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (Player.instance.moveState == PlayerMoveState.CLIMBING)
+        if (climbingHand != null)
         {
+            character.Move(new Vector3(-1 * climbingHand.delta.x, -1 * climbingHand.delta.y, -1 * climbingHand.delta.z));
             return;
         }
 
@@ -97,14 +102,6 @@ public class ContinuousMovement : MonoBehaviour
         return hasHit;
     }
 
-    private void Jump() 
-    {
-        if (character.isGrounded)
-        {
-
-        }
-    }
-
     private void RotateCharacter() 
     {
         Vector3 euler = transform.rotation.eulerAngles;
@@ -134,4 +131,14 @@ public class ContinuousMovement : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(euler);
     }
+
+    public void SetClimbingHand(ClimbingHand hand) 
+    {
+        climbingHand = hand;
+    }
+
+    public void ClearClimbingHand() {
+        climbingHand = null;
+    }
+
 }
