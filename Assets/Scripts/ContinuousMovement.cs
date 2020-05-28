@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
+// Moves Player
 public class ContinuousMovement : MonoBehaviour
 {
 
@@ -22,8 +23,12 @@ public class ContinuousMovement : MonoBehaviour
     private Vector2 secondaryInputAxis;
     private bool jumpButton;
     
-    private CharacterController character;
+    public CharacterController character;
     private bool readyToSnapTurn = true;
+
+    // Climbing
+    [SerializeField]
+    private ClimbingHand climbingHand;
     
     
     // Start is called before the first frame update
@@ -46,6 +51,12 @@ public class ContinuousMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (climbingHand != null)
+        {
+            character.Move(new Vector3(-1 * climbingHand.delta.x, -1 * climbingHand.delta.y, -1 * climbingHand.delta.z));
+            return;
+        }
+
         frameMovement = Vector3.zero;
 
         // Capsule follows the headset if player moves in real life
@@ -56,7 +67,7 @@ public class ContinuousMovement : MonoBehaviour
         
         frameMovement += direction * Time.deltaTime * speed;
 
-        // Calculate Vertical Velocity
+        // Calculate Vertical Velocity Due to Gravity
         if (CheckIsGrounded())
         {
             verticalVelocity = 0f;
@@ -64,6 +75,7 @@ public class ContinuousMovement : MonoBehaviour
             verticalVelocity += gravity * Time.fixedDeltaTime;
         }
 
+        // Handle Jump
         if (CheckIsGrounded() && jumpButton)
         {
             verticalVelocity += jumpForce;
@@ -71,9 +83,8 @@ public class ContinuousMovement : MonoBehaviour
 
         frameMovement += new Vector3(0, verticalVelocity, 0);
 
+        // Move and Rotate Character
         character.Move(frameMovement);
-
-        // Handle Rotation
         RotateCharacter();
     }
 
@@ -89,14 +100,6 @@ public class ContinuousMovement : MonoBehaviour
         float rayLength = character.center.y + 0.01f;
         bool hasHit = Physics.SphereCast(rayStart, character.radius, Vector3.down, out RaycastHit hitInfo, rayLength);
         return hasHit;
-    }
-
-    private void Jump() 
-    {
-        if (character.isGrounded)
-        {
-
-        }
     }
 
     private void RotateCharacter() 
@@ -128,4 +131,14 @@ public class ContinuousMovement : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(euler);
     }
+
+    public void SetClimbingHand(ClimbingHand hand) 
+    {
+        climbingHand = hand;
+    }
+
+    public void ClearClimbingHand() {
+        climbingHand = null;
+    }
+
 }
