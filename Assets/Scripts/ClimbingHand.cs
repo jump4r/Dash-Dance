@@ -32,7 +32,8 @@ public class ClimbingHand : MonoBehaviour
     {
         bool pressed = false;
         controller.inputDevice.IsPressed(controller.selectUsage, out pressed);
-        lastPosition = transform.localPosition;
+
+        bool released = !pressed && isPressed;
         
         if (pressed)
         {
@@ -42,24 +43,24 @@ public class ClimbingHand : MonoBehaviour
                 initialGrabFrame = false;
                 initialGrabPosition = transform.localPosition;
                 isPressed = true;
-
-
             }
             Player.instance.SetMoveState(PlayerMoveState.CLIMBING);
         }
 
-        bool released = !pressed && isPressed;
-        if (released)
+        else if (released)
         {
             movementManager.ClearClimbingHand();
+            Player.instance.SetMoveState(PlayerMoveState.IDLE);
+            MomentumManager.instance.CalculateMomentumFromPositions();
             isPressed = false;
         }
 
         else 
         {
-            Player.instance.SetMoveState(PlayerMoveState.IDLE);
             initialGrabFrame = true;
         }
+
+        lastPosition = transform.localPosition;
     }
 
     void LateUpdate() 
