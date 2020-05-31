@@ -51,7 +51,9 @@ public class ContinuousMovement : MonoBehaviour
         if (ClimbingManager.instance.climbingHands.Count > 0)
         {
             ClimbingHand hand = ClimbingManager.instance.climbingHands[0];
-            character.Move(new Vector3(-1 * hand.delta.x, -1 * hand.delta.y, -1 * hand.delta.z));
+            Vector3 handMovement = new Vector3(-1 * hand.delta.x, -1 * hand.delta.y, -1 * hand.delta.z);
+
+            character.Move(handMovement);
             return;
         }
 

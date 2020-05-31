@@ -53,11 +53,11 @@ public class ClimbingHand : MonoBehaviour
             initialGrabFrame = true;
         }
 
-        lastPosition = transform.localPosition;
+        lastPosition = transform.position;
     }
 
     void LateUpdate() 
     {
-        delta = transform.localPosition - lastPosition;
+        delta = transform.position - lastPosition;
     }
 }
