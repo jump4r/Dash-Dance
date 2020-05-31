@@ -48,7 +48,8 @@ public class ClimbingManager : MonoBehaviour
         if (climbingHands.Count == 0)
         {
             Player.instance.SetMoveState(PlayerMoveState.IDLE);
-            MomentumManager.instance.CalculateMomentumFromPositions();
+            Vector3 releaseVelocity = MomentumManager.instance.CalculateMomentumFromPositions();
+            movementManager.SetAdditionalVelocity(releaseVelocity);
         }
     }
 }

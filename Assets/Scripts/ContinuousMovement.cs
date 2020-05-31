@@ -16,6 +16,7 @@ public class ContinuousMovement : MonoBehaviour
     public float additionalHeight = 0.2f;
     public float jumpForce = 10f;
     public float rotationDegree = 45f;
+    private Vector3 additionalVelocity = Vector3.zero;
 
     private Vector3 frameMovement;
     private XRRig rig;
@@ -46,6 +47,7 @@ public class ContinuousMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // Handle Climbing Movement
         if (ClimbingManager.instance.climbingHands.Count > 0)
         {
             ClimbingHand hand = ClimbingManager.instance.climbingHands[0];
@@ -67,6 +69,7 @@ public class ContinuousMovement : MonoBehaviour
         if (CheckIsGrounded())
         {
             verticalVelocity = 0f;
+            additionalVelocity = Vector3.zero;
         } else {
             verticalVelocity += gravity * Time.fixedDeltaTime;
         }
@@ -79,8 +82,12 @@ public class ContinuousMovement : MonoBehaviour
 
         frameMovement += new Vector3(0, verticalVelocity, 0);
 
+        // Move any additional Velocity as determined by other Managers
+        frameMovement += additionalVelocity;
+
         // Move and Rotate Character
         character.Move(frameMovement);
+
         RotateCharacter();
     }
 
@@ -126,5 +133,10 @@ public class ContinuousMovement : MonoBehaviour
         }
 
         transform.rotation = Quaternion.Euler(euler);
+    }
+
+    public void SetAdditionalVelocity(Vector3 velocity)
+    {
+        additionalVelocity = velocity;
     }
 }
