@@ -13,9 +13,6 @@ public class ClimbingHand : MonoBehaviour
     private ContinuousMovement movementManager;
     [SerializeField]
     private CharacterController characterController;
-
-    // The position character was at when the grab was executed
-    private Vector3 initialGrabPosition = Vector3.zero;
     private Vector3 lastPosition = Vector3.zero;
     public Vector3 delta { get; private set; } = Vector3.zero;
     private bool initialGrabFrame = true;
@@ -37,21 +34,17 @@ public class ClimbingHand : MonoBehaviour
         
         if (pressed)
         {
-            if (initialGrabFrame) 
+            if (initialGrabFrame)
             {
-                movementManager.SetClimbingHand(this);
+                ClimbingManager.instance.handGrabbed(this);
                 initialGrabFrame = false;
-                initialGrabPosition = transform.localPosition;
                 isPressed = true;
             }
-            Player.instance.SetMoveState(PlayerMoveState.CLIMBING);
         }
 
         else if (released)
         {
-            movementManager.ClearClimbingHand();
-            Player.instance.SetMoveState(PlayerMoveState.IDLE);
-            MomentumManager.instance.CalculateMomentumFromPositions();
+            ClimbingManager.instance.handReleased(this);
             isPressed = false;
         }
 

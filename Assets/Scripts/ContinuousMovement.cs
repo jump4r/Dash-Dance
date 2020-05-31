@@ -24,12 +24,7 @@ public class ContinuousMovement : MonoBehaviour
     private bool jumpButton;
     
     public CharacterController character;
-    private bool readyToSnapTurn = true;
-
-    // Climbing
-    [SerializeField]
-    private ClimbingHand climbingHand;
-    
+    private bool readyToSnapTurn = true;    
     
     // Start is called before the first frame update
     void Start()
@@ -51,9 +46,10 @@ public class ContinuousMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (climbingHand != null)
+        if (ClimbingManager.instance.climbingHands.Count > 0)
         {
-            character.Move(new Vector3(-1 * climbingHand.delta.x, -1 * climbingHand.delta.y, -1 * climbingHand.delta.z));
+            ClimbingHand hand = ClimbingManager.instance.climbingHands[0];
+            character.Move(new Vector3(-1 * hand.delta.x, -1 * hand.delta.y, -1 * hand.delta.z));
             return;
         }
 
@@ -73,7 +69,6 @@ public class ContinuousMovement : MonoBehaviour
             verticalVelocity = 0f;
         } else {
             verticalVelocity += gravity * Time.fixedDeltaTime;
-            Debug.Log("Setting Vertical Velocity To: " + verticalVelocity);
         }
 
         // Handle Jump
@@ -132,14 +127,4 @@ public class ContinuousMovement : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(euler);
     }
-
-    public void SetClimbingHand(ClimbingHand hand) 
-    {
-        climbingHand = hand;
-    }
-
-    public void ClearClimbingHand() {
-        climbingHand = null;
-    }
-
 }

@@ -9,6 +9,8 @@ public class ClimbingManager : MonoBehaviour
     
     [SerializeField]
     private ContinuousMovement movementManager;
+
+    public List<ClimbingHand> climbingHands;
     void Start()
     {
         if (!instance)
@@ -24,11 +26,29 @@ public class ClimbingManager : MonoBehaviour
     
     public void handGrabbed(ClimbingHand hand)
     {
-        movementManager.SetClimbingHand(hand);
+        climbingHands.Add(hand);
+
+        if (climbingHands.Count < 2)
+        {
+            Player.instance.SetMoveState(PlayerMoveState.CLIMBING);
+        }
     }
 
-    public void handReleased()
+    public void handReleased(ClimbingHand handToRemove)
     {
-        movementManager.ClearClimbingHand();
+        foreach (ClimbingHand hand in climbingHands)
+        {
+            if (hand.name == handToRemove.name)
+            {
+                climbingHands.Remove(hand);
+                break;
+            }
+        }
+
+        if (climbingHands.Count == 0)
+        {
+            Player.instance.SetMoveState(PlayerMoveState.IDLE);
+            MomentumManager.instance.CalculateMomentumFromPositions();
+        }
     }
 }
