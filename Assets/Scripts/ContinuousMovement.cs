@@ -10,9 +10,9 @@ public class ContinuousMovement : MonoBehaviour
 
     public XRNode inputSource;
     public XRNode secondaryInputSource;
-    public float speed = 1f;
+    public float speed = 3f;
     public float gravity = -9.81f;
-    public float verticalVelocity = 0;
+    private float verticalVelocity = 0;
     public float additionalHeight = 0.2f;
     public float jumpForce = 10f;
     public float rotationDegree = 45f;
@@ -73,6 +73,7 @@ public class ContinuousMovement : MonoBehaviour
             verticalVelocity = 0f;
         } else {
             verticalVelocity += gravity * Time.fixedDeltaTime;
+            Debug.Log("Setting Vertical Velocity To: " + verticalVelocity);
         }
 
         // Handle Jump
