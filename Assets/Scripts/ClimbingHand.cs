@@ -17,6 +17,7 @@ public class ClimbingHand : MonoBehaviour
     public Vector3 delta { get; private set; } = Vector3.zero;
     private bool initialGrabFrame = true;
     private bool isPressed = false;
+    private bool readyToClimb = false;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +28,11 @@ public class ClimbingHand : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (!readyToClimb)
+        {
+            return;
+        }
+
         bool pressed = false;
         controller.inputDevice.IsPressed(controller.selectUsage, out pressed);
 
@@ -53,11 +59,27 @@ public class ClimbingHand : MonoBehaviour
             initialGrabFrame = true;
         }
 
-        lastPosition = transform.position;
+        lastPosition = transform.localPosition;
     }
 
     void LateUpdate() 
     {
-        delta = transform.position - lastPosition;
+        delta = transform.localPosition - lastPosition;
+    }
+
+    private void OnTriggerEnter(Collider col)
+    {
+        if (col.gameObject.tag == "Climbable")
+        {
+            readyToClimb = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider col)
+    {
+        if (col.tag == "Climbable")
+        {
+            readyToClimb = false;
+        }
     }
 }
