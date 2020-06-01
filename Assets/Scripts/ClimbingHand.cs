@@ -28,11 +28,6 @@ public class ClimbingHand : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (!readyToClimb)
-        {
-            return;
-        }
-
         bool pressed = false;
         controller.inputDevice.IsPressed(controller.selectUsage, out pressed);
 
@@ -40,7 +35,7 @@ public class ClimbingHand : MonoBehaviour
         
         if (pressed)
         {
-            if (initialGrabFrame)
+            if (initialGrabFrame && readyToClimb)
             {
                 ClimbingManager.instance.handGrabbed(this);
                 initialGrabFrame = false;
