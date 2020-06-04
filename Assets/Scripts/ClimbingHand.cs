@@ -19,6 +19,9 @@ public class ClimbingHand : MonoBehaviour
     private bool isPressed = false;
     private bool readyToClimb = false;
 
+    [SerializeField]
+    private GameObject staticClimbingHand;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +43,7 @@ public class ClimbingHand : MonoBehaviour
                 ClimbingManager.instance.handGrabbed(this);
                 initialGrabFrame = false;
                 isPressed = true;
+                LockHand();
             }
         }
 
@@ -47,6 +51,7 @@ public class ClimbingHand : MonoBehaviour
         {
             ClimbingManager.instance.handReleased(this);
             isPressed = false;
+            UnlockHand();
         }
 
         else 
@@ -59,7 +64,11 @@ public class ClimbingHand : MonoBehaviour
 
     void LateUpdate() 
     {
-        delta = transform.localPosition - lastPosition;
+        delta = lastPosition - transform.localPosition;
+        if (gameObject.name == "RightHand")
+        {
+            Debug.Log("Dist: " + Vector3.Distance(lastPosition, transform.localPosition));
+        }
     }
 
     private void OnTriggerEnter(Collider col)
@@ -76,5 +85,22 @@ public class ClimbingHand : MonoBehaviour
         {
             readyToClimb = false;
         }
+    }
+
+    // Render locked hand mesh, while disabling the primary MeshRenderer.
+    // For climbing, this is so the player can't move as they climb
+    private void LockHand()
+    {
+        staticClimbingHand.transform.position = transform.position;
+        staticClimbingHand.SetActive(true);
+
+        gameObject.GetComponentInChildren<MeshRenderer>().enabled = false;
+    }
+
+    private void UnlockHand()
+    {
+        staticClimbingHand.SetActive(false);
+
+        gameObject.GetComponentInChildren<MeshRenderer>().enabled = true;
     }
 }

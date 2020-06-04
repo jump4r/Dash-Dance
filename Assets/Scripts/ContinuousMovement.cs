@@ -47,17 +47,19 @@ public class ContinuousMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        frameMovement = Vector3.zero;
+
         // Handle Climbing Movement
         if (ClimbingManager.instance.climbingHands.Count > 0)
         {
             ClimbingHand hand = ClimbingManager.instance.climbingHands[0];
-            Vector3 handMovement = new Vector3(-1 * hand.delta.x, -1 * hand.delta.y, -1 * hand.delta.z);
 
-            character.Move(handMovement);
+            frameMovement += hand.delta;
+
+            character.Move(frameMovement);
             return;
         }
 
-        frameMovement = Vector3.zero;
 
         // Capsule follows the headset if player moves in real life
         CapsuleFollowHeadset();
@@ -111,23 +113,14 @@ public class ContinuousMovement : MonoBehaviour
     {
         Vector3 euler = transform.rotation.eulerAngles;
 
-        if (secondaryInputAxis.x < 0f) 
+        if (secondaryInputAxis.x < -0.5f || secondaryInputAxis.x > 0.5f) 
         {
             if (readyToSnapTurn)
             {
-                euler.y -= rotationDegree;
+                euler.y = euler.y + (secondaryInputAxis.x > 0 ? rotationDegree : rotationDegree * -1f);
                 readyToSnapTurn = false;
             } 
         } 
-        
-        else if (secondaryInputAxis.x > 0f)
-        {
-            if (readyToSnapTurn)
-            {
-                euler.y += rotationDegree;
-                readyToSnapTurn = false;
-            }
-        }
 
         else 
         {
