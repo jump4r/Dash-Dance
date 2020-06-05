@@ -52,14 +52,8 @@ public class ContinuousMovement : MonoBehaviour
         // Handle Climbing Movement
         if (ClimbingManager.instance.climbingHands.Count > 0)
         {
-            ClimbingHand hand = ClimbingManager.instance.climbingHands[0];
-
-            frameMovement += hand.delta;
-
-            character.Move(frameMovement);
             return;
         }
-
 
         // Capsule follows the headset if player moves in real life
         CapsuleFollowHeadset();
@@ -133,5 +127,13 @@ public class ContinuousMovement : MonoBehaviour
     public void SetAdditionalVelocity(Vector3 velocity)
     {
         additionalVelocity = velocity;
+    }
+
+    public void MoveClimbingPlayer(Vector3 delta)
+    {
+
+        frameMovement = delta;
+
+        character.Move(frameMovement);
     }
 }

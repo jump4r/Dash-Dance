@@ -21,54 +21,70 @@ public class ClimbingHand : MonoBehaviour
 
     [SerializeField]
     private GameObject staticClimbingHand;
+    private int lines = 0;
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<XRController>();
+        lastPosition = transform.position;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        delta = lastPosition - transform.position;
+
         bool pressed = false;
         controller.inputDevice.IsPressed(controller.selectUsage, out pressed);
 
-        bool released = !pressed && isPressed;
+        bool released = pressed && !isPressed;
         
-        if (pressed)
+        if (!pressed)
         {
-            if (initialGrabFrame && readyToClimb)
+            if (gameObject.name == "RightHand")
+            {
+                Debug.Log("X Distance Before: " + (Mathf.Round(Mathf.Abs(lastPosition.x - transform.position.x) * 1000f) / 1000f));
+            }
+
+            if (initialGrabFrame)
             {
                 ClimbingManager.instance.handGrabbed(this);
                 initialGrabFrame = false;
                 isPressed = true;
-                LockHand();
+                // LockHand();
             }
+
+            movementManager.MoveClimbingPlayer(delta);
+            lastPosition = transform.position;
+            if (gameObject.name == "RightHand")
+            {
+                Debug.Log("X Distance After: " + (Mathf.Round(Mathf.Abs(lastPosition.x - transform.position.x) * 1000f) / 1000f));
+            }
+
         }
 
         else if (released)
         {
             ClimbingManager.instance.handReleased(this);
             isPressed = false;
-            UnlockHand();
+            // UnlockHand();
         }
 
         else 
         {
             initialGrabFrame = true;
         }
-
-        lastPosition = transform.localPosition;
     }
 
     void LateUpdate() 
     {
-        delta = lastPosition - transform.localPosition;
         if (gameObject.name == "RightHand")
         {
-            Debug.Log("Dist: " + Vector3.Distance(lastPosition, transform.localPosition));
+            Debug.DrawLine(lastPosition, transform.position, Color.green, 5f);
         }
+        lastPosition = transform.position;
+        
     }
 
     private void OnTriggerEnter(Collider col)
