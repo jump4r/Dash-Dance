@@ -33,20 +33,13 @@ public class ClimbingHand : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        delta = lastPosition - transform.position;
-
         bool pressed = false;
         controller.inputDevice.IsPressed(controller.selectUsage, out pressed);
 
-        bool released = pressed && !isPressed;
+        bool released = !pressed && isPressed;
         
-        if (!pressed)
+        if (pressed)
         {
-            if (gameObject.name == "RightHand")
-            {
-                Debug.Log("X Distance Before: " + (Mathf.Round(Mathf.Abs(lastPosition.x - transform.position.x) * 1000f) / 1000f));
-            }
-
             if (initialGrabFrame)
             {
                 ClimbingManager.instance.handGrabbed(this);
@@ -54,14 +47,8 @@ public class ClimbingHand : MonoBehaviour
                 isPressed = true;
                 // LockHand();
             }
-
             movementManager.MoveClimbingPlayer(delta);
             lastPosition = transform.position;
-            if (gameObject.name == "RightHand")
-            {
-                Debug.Log("X Distance After: " + (Mathf.Round(Mathf.Abs(lastPosition.x - transform.position.x) * 1000f) / 1000f));
-            }
-
         }
 
         else if (released)
@@ -75,16 +62,17 @@ public class ClimbingHand : MonoBehaviour
         {
             initialGrabFrame = true;
         }
+
+        lastPosition = transform.position;
     }
 
     void LateUpdate() 
     {
+        delta = lastPosition - transform.position;
         if (gameObject.name == "RightHand")
         {
             Debug.DrawLine(lastPosition, transform.position, Color.green, 5f);
-        }
-        lastPosition = transform.position;
-        
+        }        
     }
 
     private void OnTriggerEnter(Collider col)

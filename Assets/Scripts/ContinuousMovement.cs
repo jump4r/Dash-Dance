@@ -34,8 +34,7 @@ public class ContinuousMovement : MonoBehaviour
         rig = GetComponent<XRRig>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         InputDevice device = InputDevices.GetDeviceAtXRNode(inputSource);
         InputDevice secondaryDevice = InputDevices.GetDeviceAtXRNode(secondaryInputSource);
@@ -43,10 +42,7 @@ public class ContinuousMovement : MonoBehaviour
         device.TryGetFeatureValue(CommonUsages.primary2DAxis, out inputAxis);
         secondaryDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out secondaryInputAxis);
         secondaryDevice.TryGetFeatureValue(CommonUsages.primaryButton, out jumpButton);
-    }
 
-    private void FixedUpdate()
-    {
         frameMovement = Vector3.zero;
 
         // Handle Climbing Movement
