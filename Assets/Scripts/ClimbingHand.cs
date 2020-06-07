@@ -68,11 +68,7 @@ public class ClimbingHand : MonoBehaviour
 
     void LateUpdate() 
     {
-        delta = lastPosition - transform.position;
-        if (gameObject.name == "RightHand")
-        {
-            Debug.DrawLine(lastPosition, transform.position, Color.green, 5f);
-        }        
+        delta = lastPosition - transform.position;      
     }
 
     private void OnTriggerEnter(Collider col)
