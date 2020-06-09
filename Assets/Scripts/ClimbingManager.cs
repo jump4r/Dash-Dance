@@ -52,4 +52,9 @@ public class ClimbingManager : MonoBehaviour
             movementManager.SetAdditionalVelocity(releaseVelocity);
         }
     }
+
+    public void UpdateClimbingHand(Vector3 delta)
+    {
+        movementManager.MoveClimbingPlayer(delta);
+    }
 }

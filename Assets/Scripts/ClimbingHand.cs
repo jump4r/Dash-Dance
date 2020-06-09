@@ -16,46 +16,45 @@ public class ClimbingHand : MonoBehaviour
     private Vector3 lastPosition = Vector3.zero;
     public Vector3 delta { get; private set; } = Vector3.zero;
     private bool initialGrabFrame = true;
-    private bool isPressed = false;
-    private bool readyToClimb = false;
+    private bool climbing = false;
+    private bool canClimb = false;
 
     [SerializeField]
     private GameObject staticClimbingHand;
-    private int lines = 0;
 
-    // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<XRController>();
         lastPosition = transform.position;
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         bool pressed = false;
         controller.inputDevice.IsPressed(controller.selectUsage, out pressed);
 
-        bool released = !pressed && isPressed;
-        
-        if (pressed)
+        bool released = !pressed && climbing;
+
+        if (pressed && canClimb)
         {
             if (initialGrabFrame)
             {
                 ClimbingManager.instance.handGrabbed(this);
                 initialGrabFrame = false;
-                isPressed = true;
-                // LockHand();
+                climbing = true;
             }
-            movementManager.MoveClimbingPlayer(delta);
-            lastPosition = transform.position;
         }
 
-        else if (released)
+        if (released)
         {
             ClimbingManager.instance.handReleased(this);
-            isPressed = false;
-            // UnlockHand();
+            climbing = false;
+        }
+        
+        else if (climbing)
+        {
+            ClimbingManager.instance.UpdateClimbingHand(delta);
+            lastPosition = transform.position;
         }
 
         else 
@@ -75,7 +74,7 @@ public class ClimbingHand : MonoBehaviour
     {
         if (col.gameObject.tag == "Climbable")
         {
-            readyToClimb = true;
+            canClimb = true;
         }
     }
 
@@ -83,7 +82,7 @@ public class ClimbingHand : MonoBehaviour
     {
         if (col.tag == "Climbable")
         {
-            readyToClimb = false;
+            canClimb = false;
         }
     }
 
