@@ -10,7 +10,7 @@ public class ClimbingHand : MonoBehaviour
     private XRController controller; 
     
     [SerializeField]
-    private ContinuousMovement movementManager;
+    private PlayerMovement movementManager;
     [SerializeField]
     private CharacterController characterController;
     private Vector3 lastPosition = Vector3.zero;

@@ -5,6 +5,9 @@ using UnityEngine;
 public enum PlayerMoveState {
     IDLE,
     CLIMBING,
+    BEGIN_VAULT,
+    VAULTING,
+    SWINGING,
 }
 public class Player : MonoBehaviour
 {

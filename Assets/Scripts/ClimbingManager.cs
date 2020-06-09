@@ -8,7 +8,7 @@ public class ClimbingManager : MonoBehaviour
     public static ClimbingManager instance;
     
     [SerializeField]
-    private ContinuousMovement movementManager;
+    private PlayerMovement movementManager;
 
     public List<ClimbingHand> climbingHands;
     void Start()

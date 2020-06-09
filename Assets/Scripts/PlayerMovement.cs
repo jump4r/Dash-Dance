@@ -5,7 +5,7 @@ using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
 // Moves Player
-public class ContinuousMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
 
     public XRNode inputSource;
@@ -46,8 +46,10 @@ public class ContinuousMovement : MonoBehaviour
         frameMovement = Vector3.zero;
 
         // Handle Climbing Movement
-        if (ClimbingManager.instance.climbingHands.Count > 0)
+        // Original -- ifClimbingManager.instance.climbingHands.Count > 0
+        if (Player.instance.moveState == PlayerMoveState.CLIMBING)
         {
+            // Movement Handled by MoveClimbingPlayer, which is called from ClimbingManager.
             return;
         }
 
