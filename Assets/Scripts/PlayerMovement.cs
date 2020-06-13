@@ -14,7 +14,6 @@ public class PlayerMovement : MonoBehaviour
     public float gravity = -9.81f;
     private float verticalVelocity = 0;
     public float additionalHeight = 0.2f;
-    public float jumpForce = 10f;
     public float rotationDegree = 45f;
     private Vector3 additionalVelocity = Vector3.zero;
 
@@ -22,6 +21,7 @@ public class PlayerMovement : MonoBehaviour
     private XRRig rig;
     private Vector2 inputAxis;
     private Vector2 secondaryInputAxis;
+    public float jumpForce = 10f;
     private bool jumpButton;
     
     public CharacterController character;
@@ -120,6 +120,15 @@ public class PlayerMovement : MonoBehaviour
         }
 
         transform.rotation = Quaternion.Euler(euler);
+    }
+
+    private void Jump()
+    {
+        verticalVelocity += jumpForce;
+        if (Player.instance.moveState == PlayerMoveState.BEGIN_VAULT)
+        {
+            // Remove collider on vault? I'm not totally sure.
+        }
     }
 
     public void SetAdditionalVelocity(Vector3 velocity)
