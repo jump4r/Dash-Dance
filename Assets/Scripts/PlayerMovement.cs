@@ -98,7 +98,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 rayStart = transform.TransformPoint(character.center);
         float rayLength = character.center.y + 0.01f;
         bool hasHit = Physics.SphereCast(rayStart, character.radius, Vector3.down, out RaycastHit hitInfo, rayLength);
-        return hasHit;
+        return hasHit && !hitInfo.collider.isTrigger;
     }
 
     private void RotateCharacter() 
