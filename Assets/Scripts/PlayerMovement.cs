@@ -5,12 +5,12 @@ using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
 // Moves Player
-public static class PlayerConstants
+public static class PlayerInfo
 {
     public static float additionalHeight = 0.2f;
     public static float speed = 3f;
     public static float gravity = -0.2f;
-    public static float jumpForce = 0.08f;
+    public static float jumpForce = 0.05f;
     public static float rotationDegree = 45f;
 }
 
@@ -19,11 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
     public XRNode inputSource;
     public XRNode secondaryInputSource;
-    public float speed = 3f;
-    public float gravity = -9.81f;
     private float verticalVelocity = 0;
-    public float additionalHeight = 0.2f;
-    public float rotationDegree = 45f;
     private Vector3 additionalVelocity = Vector3.zero;
 
     private Vector3 frameMovement;
@@ -32,7 +28,6 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 secondaryInputAxis;
 
     // Jump Variables
-    public float jumpForce = 10f;
     private bool jumpButton;
     
     public CharacterController character;
@@ -72,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
         Quaternion headYaw = Quaternion.Euler(0, rig.cameraGameObject.transform.eulerAngles.y, 0);
         Vector3 direction = headYaw * new Vector3(inputAxis.x, 0, inputAxis.y);
         
-        frameMovement += direction * Time.deltaTime * speed;
+        frameMovement += direction * Time.deltaTime * PlayerInfo.speed;
 
         // Calculate Vertical Velocity Due to Gravity
         if (CheckIsGrounded())
@@ -80,14 +75,13 @@ public class PlayerMovement : MonoBehaviour
             verticalVelocity = 0f;
             additionalVelocity = Vector3.zero;
         } else {
-            verticalVelocity += gravity * Time.fixedDeltaTime;
+            verticalVelocity += PlayerInfo.gravity * Time.fixedDeltaTime;
         }
 
         // Handle Jump
         if (CheckIsGrounded() && jumpButton)
         {
-            Debug.Log("Hit jump button");
-            verticalVelocity += jumpForce;
+            Jump();
         }
 
         frameMovement += new Vector3(0, verticalVelocity, 0);
@@ -102,7 +96,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void CapsuleFollowHeadset() {
-        character.height = rig.cameraInRigSpaceHeight + additionalHeight;
+        character.height = rig.cameraInRigSpaceHeight + PlayerInfo.additionalHeight;
         Vector3 capsuleCenter = transform.InverseTransformPoint(rig.cameraGameObject.transform.position);
         character.center = new Vector3(capsuleCenter.x, character.height / 2, capsuleCenter.z);
     }
@@ -125,7 +119,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (readyToSnapTurn)
             {
-                euler.y = euler.y + (secondaryInputAxis.x > 0 ? rotationDegree : rotationDegree * -1f);
+                euler.y = euler.y + (secondaryInputAxis.x > 0 ? PlayerInfo.rotationDegree : PlayerInfo.rotationDegree * -1f);
                 readyToSnapTurn = false;
             } 
         } 
@@ -140,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        verticalVelocity += jumpForce;
+        verticalVelocity += PlayerInfo.jumpForce;
         playerVault.TryVault();
     }
 
