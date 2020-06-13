@@ -5,6 +5,15 @@ using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
 // Moves Player
+public static class PlayerConstants
+{
+    public static float additionalHeight = 0.2f;
+    public static float speed = 3f;
+    public static float gravity = -0.2f;
+    public static float jumpForce = 0.08f;
+    public static float rotationDegree = 45f;
+}
+
 public class PlayerMovement : MonoBehaviour
 {
 
@@ -21,16 +30,22 @@ public class PlayerMovement : MonoBehaviour
     private XRRig rig;
     private Vector2 inputAxis;
     private Vector2 secondaryInputAxis;
+
+    // Jump Variables
     public float jumpForce = 10f;
     private bool jumpButton;
     
     public CharacterController character;
+    private PlayerVault playerVault;
+
+    // Rotation
     private bool readyToSnapTurn = true;    
     
     // Start is called before the first frame update
     void Start()
     {
         character = GetComponent<CharacterController>();
+        playerVault = GetComponent<PlayerVault>();
         rig = GetComponent<XRRig>();
     }
 
@@ -45,8 +60,6 @@ public class PlayerMovement : MonoBehaviour
 
         frameMovement = Vector3.zero;
 
-        // Handle Climbing Movement
-        // Original -- ifClimbingManager.instance.climbingHands.Count > 0
         if (Player.instance.moveState == PlayerMoveState.CLIMBING)
         {
             // Movement Handled by MoveClimbingPlayer, which is called from ClimbingManager.
@@ -73,6 +86,7 @@ public class PlayerMovement : MonoBehaviour
         // Handle Jump
         if (CheckIsGrounded() && jumpButton)
         {
+            Debug.Log("Hit jump button");
             verticalVelocity += jumpForce;
         }
 
@@ -97,8 +111,10 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 rayStart = transform.TransformPoint(character.center);
         float rayLength = character.center.y + 0.01f;
-        bool hasHit = Physics.SphereCast(rayStart, character.radius, Vector3.down, out RaycastHit hitInfo, rayLength);
-        return hasHit && !hitInfo.collider.isTrigger;
+        int floorMask = LayerMask.GetMask("Floor");
+        
+        bool hasHit = Physics.SphereCast(rayStart, character.radius, Vector3.down, out RaycastHit hitInfo, rayLength, floorMask);
+        return hasHit;
     }
 
     private void RotateCharacter() 
@@ -125,10 +141,7 @@ public class PlayerMovement : MonoBehaviour
     private void Jump()
     {
         verticalVelocity += jumpForce;
-        if (Player.instance.moveState == PlayerMoveState.BEGIN_VAULT)
-        {
-            // Remove collider on vault? I'm not totally sure.
-        }
+        playerVault.TryVault();
     }
 
     public void SetAdditionalVelocity(Vector3 velocity)
@@ -140,7 +153,6 @@ public class PlayerMovement : MonoBehaviour
     {
 
         frameMovement = delta;
-
         character.Move(frameMovement);
     }
 }

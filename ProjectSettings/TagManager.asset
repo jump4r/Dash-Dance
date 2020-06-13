@@ -18,10 +18,10 @@ TagManager:
   - 
   - Grabbable
   - Player
-  - Hands
+  - Hand
   - Vault
-  - 
-  - 
+  - IgnorePlayer
+  - Floor
   - 
   - 
   - 
