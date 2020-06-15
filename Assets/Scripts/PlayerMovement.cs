@@ -108,6 +108,12 @@ public class PlayerMovement : MonoBehaviour
         int floorMask = LayerMask.GetMask("Floor");
         
         bool hasHit = Physics.SphereCast(rayStart, character.radius, Vector3.down, out RaycastHit hitInfo, rayLength, floorMask);
+
+        if (hasHit && Player.instance.moveState == PlayerMoveState.IDLE)
+        {
+            Player.instance.SetMoveState(PlayerMoveState.IDLE);
+        }
+
         return hasHit;
     }
 
@@ -136,6 +142,14 @@ public class PlayerMovement : MonoBehaviour
     {
         verticalVelocity += PlayerInfo.jumpForce;
         playerVault.TryVault();
+    }
+
+    public void Vault()
+    {
+        float vaultSpeed = 3f;
+        Quaternion headYaw = Quaternion.Euler(0, rig.cameraGameObject.transform.eulerAngles.y, 0);
+        Vector3 vaultVel = (headYaw * Vector3.forward) * vaultSpeed * Time.deltaTime;
+        SetAdditionalVelocity(vaultVel);
     }
 
     public void SetAdditionalVelocity(Vector3 velocity)

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class VaultHand : MonoBehaviour
 {
+
+    public PlayerMovement movement;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +22,9 @@ public class VaultHand : MonoBehaviour
     {
         if (collision.gameObject.tag == "Vault" && Player.instance.moveState == PlayerMoveState.BEGIN_VAULT)
         {
-            Debug.Log("Vault Code");
+            collision.gameObject.layer = 12; // Set To IgnorePlayer layer
+            movement.Vault();
+            Player.instance.SetMoveState(PlayerMoveState.VAULTING);
         }
     }
 }

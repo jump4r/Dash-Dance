@@ -27,7 +27,7 @@ public class PlayerVault : MonoBehaviour
     {
         if (canVault)
         {
-            Debug.Log("Start Vaulting");
+            Debug.Log("Begin Vault");
             Player.instance.SetMoveState(PlayerMoveState.BEGIN_VAULT);
         }
     }
