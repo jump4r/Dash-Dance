@@ -12,6 +12,7 @@ public static class PlayerInfo
     public static float gravity = -0.2f;
     public static float jumpForce = 0.05f;
     public static float rotationDegree = 45f;
+    public static float vaultSpeed = 5f;
 }
 
 public class PlayerMovement : MonoBehaviour
@@ -58,6 +59,12 @@ public class PlayerMovement : MonoBehaviour
         if (Player.instance.moveState == PlayerMoveState.CLIMBING)
         {
             // Movement Handled by MoveClimbingPlayer, which is called from ClimbingManager.
+            return;
+        }
+
+        else if (Player.instance.moveState == PlayerMoveState.SWINGING)
+        {
+            // Movement Handled By MoveSwingingPlayer
             return;
         }
 
@@ -146,9 +153,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void Vault()
     {
-        float vaultSpeed = 3f;
         Quaternion headYaw = Quaternion.Euler(0, rig.cameraGameObject.transform.eulerAngles.y, 0);
-        Vector3 vaultVel = (headYaw * Vector3.forward) * vaultSpeed * Time.deltaTime;
+        Vector3 vaultVel = (headYaw * Vector3.forward) * PlayerInfo.vaultSpeed * Time.deltaTime;
         SetAdditionalVelocity(vaultVel);
     }
 
@@ -160,6 +166,12 @@ public class PlayerMovement : MonoBehaviour
     public void MoveClimbingPlayer(Vector3 delta)
     {
 
+        frameMovement = delta;
+        character.Move(frameMovement);
+    }
+
+    public void MoveSwingingPlayer(Vector3 delta)
+    {
         frameMovement = delta;
         character.Move(frameMovement);
     }

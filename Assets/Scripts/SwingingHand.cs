@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class ClimbingHand : MonoBehaviour
+public class SwingingHand : MonoBehaviour
 {
-
-    [SerializeField]
+    // Start is called before the first frame update
     private XRController controller; 
     
     [SerializeField]
@@ -16,16 +15,12 @@ public class ClimbingHand : MonoBehaviour
     private Vector3 lastPosition = Vector3.zero;
     public Vector3 delta { get; private set; } = Vector3.zero;
     private bool initialGrabFrame = true;
-    private bool climbing = false;
-    private bool canClimb = false;
 
-    [SerializeField]
-    private GameObject staticClimbingHand;
-
+    private bool swinging = false;
+    private bool canSwing = false;
     void Start()
     {
-        controller = GetComponent<XRController>();
-        lastPosition = transform.position;
+        
     }
 
     void FixedUpdate()
@@ -33,25 +28,25 @@ public class ClimbingHand : MonoBehaviour
         bool pressed = false;
         controller.inputDevice.IsPressed(controller.selectUsage, out pressed);
 
-        bool released = !pressed && climbing;
+        bool released = !pressed && swinging;
 
-        if (pressed && canClimb)
+        if (pressed && canSwing)
         {
             if (initialGrabFrame)
             {
-                ClimbingManager.instance.handGrabbed(this);
+                SwingingManager.instance.handGrabbed(this);
                 initialGrabFrame = false;
-                climbing = true;
+                swinging = true;
             }
         }
 
         if (released)
         {
-            ClimbingManager.instance.handReleased(this);
-            climbing = false;
+            SwingingManager.instance.handReleased(this);
+            swinging = false;
         }
         
-        else if (climbing)
+        else if (swinging)
         {
             ClimbingManager.instance.UpdateClimbingHand(delta);
             lastPosition = transform.position;
@@ -64,25 +59,20 @@ public class ClimbingHand : MonoBehaviour
 
         lastPosition = transform.position;
     }
-
-    void LateUpdate() 
-    {
-        delta = lastPosition - transform.position;      
-    }
-
     private void OnTriggerEnter(Collider col)
     {
-        if (col.gameObject.tag == "Climbable")
+        if (col.gameObject.tag == "Swingable")
         {
-            canClimb = true;
+            canSwing = true;
         }
+
     }
 
     private void OnTriggerExit(Collider col)
     {
-        if (col.tag == "Climbable")
+        if (col.tag == "Swingable")
         {
-            canClimb = false;
+            canSwing = false;
         }
     }
 }
