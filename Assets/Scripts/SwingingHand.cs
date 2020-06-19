@@ -20,7 +20,8 @@ public class SwingingHand : MonoBehaviour
     private bool canSwing = false;
     void Start()
     {
-        
+        controller = GetComponent<XRController>();
+        lastPosition = transform.position;
     }
 
     void FixedUpdate()
@@ -48,7 +49,7 @@ public class SwingingHand : MonoBehaviour
         
         else if (swinging)
         {
-            ClimbingManager.instance.UpdateClimbingHand(delta);
+            SwingingManager.instance.UpdateSwingingHand(delta);
             lastPosition = transform.position;
         }
 
@@ -59,6 +60,12 @@ public class SwingingHand : MonoBehaviour
 
         lastPosition = transform.position;
     }
+
+    void LateUpdate() 
+    {
+        delta = lastPosition - transform.position;      
+    }
+    
     private void OnTriggerEnter(Collider col)
     {
         if (col.gameObject.tag == "Swingable")
