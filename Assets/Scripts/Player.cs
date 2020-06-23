@@ -8,6 +8,7 @@ public enum PlayerMoveState {
     BEGIN_VAULT,
     VAULTING,
     SWINGING,
+    WALLRUNNING,
 }
 public class Player : MonoBehaviour
 {

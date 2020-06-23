@@ -8,6 +8,7 @@ TagManager:
   - Vault
   - VaultEntry
   - Swingable
+  - Wall
   layers:
   - Default
   - TransparentFX

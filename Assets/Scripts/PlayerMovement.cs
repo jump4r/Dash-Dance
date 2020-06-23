@@ -165,14 +165,12 @@ public class PlayerMovement : MonoBehaviour
 
     public void MoveClimbingPlayer(Vector3 delta)
     {
-        Debug.Log("Move Climbing Player: " + delta.x);
         frameMovement = delta;
         character.Move(frameMovement);
     }
 
     public void MoveSwingingPlayer(Vector3 delta)
     {
-        Debug.Log("Move Swinging Player: " + delta.x);
         frameMovement = delta;
         character.Move(frameMovement);
     }
