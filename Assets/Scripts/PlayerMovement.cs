@@ -62,12 +62,6 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
-        else if (Player.instance.moveState == PlayerMoveState.SWINGING)
-        {
-            // Movement Handled By MoveSwingingPlayer
-            return;
-        }
-
         // Capsule follows the headset if player moves in real life
         CapsuleFollowHeadset();
 
@@ -164,12 +158,6 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void MoveClimbingPlayer(Vector3 delta)
-    {
-        frameMovement = delta;
-        character.Move(frameMovement);
-    }
-
-    public void MoveSwingingPlayer(Vector3 delta)
     {
         frameMovement = delta;
         character.Move(frameMovement);
