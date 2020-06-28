@@ -12,10 +12,17 @@ using UnityEngine.XR.Interaction.Toolkit;
         Right,
     }
 
+public static class PlayerWallRunConstants {
+    public const float vertMax = 0.1f;
+    public const float vertDamp = -0.12f;
+    public const float forwardVel = 3f;
+}
+
 public class PlayerWallRun : MonoBehaviour
 {
 
     private XRRig rig;
+    private PlayerMovement movement;
     private bool canWallRun = true;
 
     private HitFace hitFace = HitFace.None;
@@ -23,6 +30,7 @@ public class PlayerWallRun : MonoBehaviour
     void Start()
     {
         rig = GetComponent<XRRig>();
+        movement = GetComponent<PlayerMovement>();
     }
 
     private void Update()
@@ -31,16 +39,19 @@ public class PlayerWallRun : MonoBehaviour
         {
             // Todo: Wallrunning code, need to whiteboard this
             // Player should move in a constant direction up the wall, reaching a max point, then going down.
+            movement.Wallrun();
         }
     }
 
     private void OnControllerColliderHit(ControllerColliderHit col)
     {
-
-        Debug.Log(col.gameObject.tag);
-
         if (!canWallRun || col.gameObject.tag != "Wall")
         {
+            return;
+        }
+
+        // Only want to call this once, when player starts wallrunning
+        else if (Player.instance.moveState == PlayerMoveState.WALLRUNNING) {
             return;
         }
 
@@ -48,19 +59,27 @@ public class PlayerWallRun : MonoBehaviour
         RaycastHit hit;
         bool didHit = Physics.Raycast(transform.position, headDir * Vector3.forward, out hit, 5f);
 
+
         if (didHit)
         {
-            hitFace = GetHitFace(hit);
+           StartWallrun(hit, headDir);
         }
+    }
+
+    private void StartWallrun(RaycastHit hit, Quaternion headDir)
+    {
+        Vector3 lookVec = headDir * Vector3.forward;
+        Vector3 normalVec = hit.normal * -1f;
+
+        float collisionAngle = Vector3.Cross(lookVec.normalized, normalVec.normalized).y;
+        collisionAngle = Mathf.RoundToInt(collisionAngle * 180); 
 
         Player.instance.SetMoveState(PlayerMoveState.WALLRUNNING);
+        movement.StartWallrun();
     }
 
-    private void OnTriggerExit(Collider col)
-    {
-        Player.instance.SetMoveState(PlayerMoveState.IDLE);
-    }
 
+    // To remove
     private HitFace GetHitFace(RaycastHit hit)
     {
         

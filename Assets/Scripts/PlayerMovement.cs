@@ -152,6 +152,29 @@ public class PlayerMovement : MonoBehaviour
         SetAdditionalVelocity(vaultVel);
     }
 
+    public void StartWallrun() 
+    {
+        verticalVelocity = PlayerWallRunConstants.vertMax;
+        Debug.Log("Start Wallrun");
+    }
+
+    public void Wallrun()
+    {
+        // Calculate Vertical Velocity Due to Gravity
+        if (CheckIsGrounded())
+        {
+            verticalVelocity = 0f;
+            additionalVelocity = Vector3.zero;
+            Player.instance.SetMoveState(PlayerMoveState.IDLE);
+        } else {
+            verticalVelocity += PlayerWallRunConstants.vertDamp * Time.fixedDeltaTime;
+        }
+
+        frameMovement += new Vector3(0, verticalVelocity, 0);
+
+        character.Move(frameMovement);
+
+    }
     public void SetAdditionalVelocity(Vector3 velocity)
     {
         additionalVelocity = velocity;
