@@ -59,7 +59,6 @@ public class PlayerWallRun : MonoBehaviour
         RaycastHit hit;
         bool didHit = Physics.Raycast(transform.position, headDir * Vector3.forward, out hit, 5f);
 
-
         if (didHit)
         {
            StartWallrun(hit, headDir);
