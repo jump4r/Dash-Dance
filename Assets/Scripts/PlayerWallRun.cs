@@ -71,7 +71,9 @@ public class PlayerWallRun : MonoBehaviour
         Vector3 normalVec = hit.normal * -1f;
 
         float collisionAngle = Vector3.Cross(lookVec.normalized, normalVec.normalized).y;
-        collisionAngle = Mathf.RoundToInt(collisionAngle * 180); 
+        collisionAngle = Mathf.RoundToInt(collisionAngle * 180);
+
+        Debug.Log("Collision Angle: " + collisionAngle);
 
         Player.instance.SetMoveState(PlayerMoveState.WALLRUNNING);
         movement.StartWallrun();

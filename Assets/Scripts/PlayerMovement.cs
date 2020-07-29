@@ -5,19 +5,11 @@ using UnityEngine.XR;
 using UnityEngine.XR.Interaction.Toolkit;
 
 // Moves Player
-public static class PlayerInfo
-{
-    public static float additionalHeight = 0.2f;
-    public static float speed = 3f;
-    public static float gravity = -0.2f;
-    public static float jumpForce = 0.05f;
-    public static float rotationDegree = 45f;
-    public static float vaultSpeed = 5f;
-}
 
 public class PlayerMovement : MonoBehaviour
 {
 
+    public delegate void Del();
     public XRNode inputSource;
     public XRNode secondaryInputSource;
     private float verticalVelocity = 0;
@@ -30,12 +22,16 @@ public class PlayerMovement : MonoBehaviour
 
     // Jump Variables
     private bool jumpButton;
+    private Del jumpAction;
     
     public CharacterController character;
     private PlayerVault playerVault;
 
     // Rotation
     private bool readyToSnapTurn = true;    
+
+    private InputDevice device;
+    private InputDevice secondaryDevice;
     
     // Start is called before the first frame update
     void Start()
@@ -43,13 +39,16 @@ public class PlayerMovement : MonoBehaviour
         character = GetComponent<CharacterController>();
         playerVault = GetComponent<PlayerVault>();
         rig = GetComponent<XRRig>();
+
+        // Set Initial Delegates.
+        jumpAction = Jump;
+
+        device = InputDevices.GetDeviceAtXRNode(inputSource);
+        secondaryDevice = InputDevices.GetDeviceAtXRNode(secondaryInputSource);
     }
 
     private void Update()
     {
-        InputDevice device = InputDevices.GetDeviceAtXRNode(inputSource);
-        InputDevice secondaryDevice = InputDevices.GetDeviceAtXRNode(secondaryInputSource);
-
         device.TryGetFeatureValue(CommonUsages.primary2DAxis, out inputAxis);
         secondaryDevice.TryGetFeatureValue(CommonUsages.primary2DAxis, out secondaryInputAxis);
         secondaryDevice.TryGetFeatureValue(CommonUsages.primaryButton, out jumpButton);
@@ -82,7 +81,7 @@ public class PlayerMovement : MonoBehaviour
         // Handle Jump
         if (CheckIsGrounded() && jumpButton)
         {
-            Jump();
+            jumpAction();
         }
 
         frameMovement += new Vector3(0, verticalVelocity, 0);
@@ -185,4 +184,14 @@ public class PlayerMovement : MonoBehaviour
         frameMovement = delta;
         character.Move(frameMovement);
     }
+}
+
+public static class PlayerInfo
+{
+    public static float additionalHeight = 0.2f;
+    public static float speed = 3f;
+    public static float gravity = -0.2f;
+    public static float jumpForce = 0.05f;
+    public static float rotationDegree = 45f;
+    public static float vaultSpeed = 5f;
 }
