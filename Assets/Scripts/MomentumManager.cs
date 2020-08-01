@@ -61,7 +61,6 @@ public class MomentumManager : MonoBehaviour
         float distance = Vector3.Distance(startPoint, lastPoint) * 20f;
         if (distance > 10f) {
             Vector3 additionalVelocity = (lastPoint - startPoint) * (distance / 100f);
-            Debug.Log("Add this much upward velocity! " + additionalVelocity);
             return additionalVelocity;
         }
 

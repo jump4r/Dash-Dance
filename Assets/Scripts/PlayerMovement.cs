@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     public delegate void Del();
     public XRNode inputSource;
     public XRNode secondaryInputSource;
-    private float verticalVelocity = 0;
+    protected float verticalVelocity = 0;
     private Vector3 additionalVelocity = Vector3.zero;
 
     private Vector3 frameMovement;
@@ -23,25 +23,27 @@ public class PlayerMovement : MonoBehaviour
     // Jump Variables
     private bool jumpButton;
     private Del jumpAction;
+    private PlayerJump playerJump;
     
     public CharacterController character;
-    private PlayerVault playerVault;
 
     // Rotation
     private bool readyToSnapTurn = true;    
 
     private InputDevice device;
     private InputDevice secondaryDevice;
+
+    
     
     // Start is called before the first frame update
     void Start()
     {
         character = GetComponent<CharacterController>();
-        playerVault = GetComponent<PlayerVault>();
         rig = GetComponent<XRRig>();
+        playerJump = GetComponent<PlayerJump>();
 
         // Set Initial Delegates.
-        jumpAction = Jump;
+        jumpAction = playerJump.Jump;
 
         device = InputDevices.GetDeviceAtXRNode(inputSource);
         secondaryDevice = InputDevices.GetDeviceAtXRNode(secondaryInputSource);
@@ -90,9 +92,30 @@ public class PlayerMovement : MonoBehaviour
         frameMovement += additionalVelocity;
 
         // Move and Rotate Character
+        DefaultMove(frameMovement);
+    }
+
+    private void DefaultMove(Vector3 frameMovement)
+    {
         character.Move(frameMovement);
 
-        RotateCharacter();
+        Vector3 euler = transform.rotation.eulerAngles;
+
+        if (secondaryInputAxis.x < -0.5f || secondaryInputAxis.x > 0.5f) 
+        {
+            if (readyToSnapTurn)
+            {
+                euler.y = euler.y + (secondaryInputAxis.x > 0 ? PlayerInfo.rotationDegree : PlayerInfo.rotationDegree * -1f);
+                readyToSnapTurn = false;
+            } 
+        } 
+
+        else 
+        {
+            readyToSnapTurn = true;
+        }
+
+        transform.rotation = Quaternion.Euler(euler);
     }
 
     private void CapsuleFollowHeadset() {
@@ -117,33 +140,6 @@ public class PlayerMovement : MonoBehaviour
         return hasHit;
     }
 
-    private void RotateCharacter() 
-    {
-        Vector3 euler = transform.rotation.eulerAngles;
-
-        if (secondaryInputAxis.x < -0.5f || secondaryInputAxis.x > 0.5f) 
-        {
-            if (readyToSnapTurn)
-            {
-                euler.y = euler.y + (secondaryInputAxis.x > 0 ? PlayerInfo.rotationDegree : PlayerInfo.rotationDegree * -1f);
-                readyToSnapTurn = false;
-            } 
-        } 
-
-        else 
-        {
-            readyToSnapTurn = true;
-        }
-
-        transform.rotation = Quaternion.Euler(euler);
-    }
-
-    private void Jump()
-    {
-        verticalVelocity += PlayerInfo.jumpForce;
-        playerVault.TryVault();
-    }
-
     public void Vault()
     {
         Quaternion headYaw = Quaternion.Euler(0, rig.cameraGameObject.transform.eulerAngles.y, 0);
@@ -154,12 +150,10 @@ public class PlayerMovement : MonoBehaviour
     public void StartWallrun() 
     {
         verticalVelocity = PlayerWallRunConstants.vertMax;
-        Debug.Log("Start Wallrun");
     }
 
     public void Wallrun()
     {
-        // Calculate Vertical Velocity Due to Gravity
         if (CheckIsGrounded())
         {
             verticalVelocity = 0f;
@@ -169,6 +163,7 @@ public class PlayerMovement : MonoBehaviour
             verticalVelocity += PlayerWallRunConstants.vertDamp * Time.fixedDeltaTime;
         }
 
+        // Adjust movement to ride walls
         frameMovement += new Vector3(0, verticalVelocity, 0);
 
         character.Move(frameMovement);
@@ -177,6 +172,11 @@ public class PlayerMovement : MonoBehaviour
     public void SetAdditionalVelocity(Vector3 velocity)
     {
         additionalVelocity = velocity;
+    }
+
+    public void AddVerticalVelocity(float vel)
+    {
+        verticalVelocity += vel;
     }
 
     public void MoveClimbingPlayer(Vector3 delta)
