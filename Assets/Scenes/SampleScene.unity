@@ -1575,6 +1575,7 @@ GameObject:
   - component: {fileID: 1099901676}
   - component: {fileID: 1099901679}
   - component: {fileID: 1099901680}
+  - component: {fileID: 1099901681}
   m_Layer: 9
   m_Name: VR Rig
   m_TagString: Untagged
@@ -1696,6 +1697,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b7a4d45d79e22949852a927415360d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1099901681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1099901672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb22a77d2a9cf4746bbed64c140b72ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1137260225

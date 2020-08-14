@@ -72,19 +72,7 @@ public class PlayerMovement : MonoBehaviour
         frameMovement += direction * Time.deltaTime * PlayerInfo.speed;
 
         // Calculate Vertical Velocity Due to Gravity
-        if (CheckIsGrounded())
-        {
-            verticalVelocity = 0f;
-            additionalVelocity = Vector3.zero;
-        } else {
-            verticalVelocity += PlayerInfo.gravity * Time.fixedDeltaTime;
-        }
-
-        // Handle Jump
-        if (CheckIsGrounded() && jumpButton)
-        {
-            jumpAction();
-        }
+       AdjustVerticalVelocity();
 
         frameMovement += new Vector3(0, verticalVelocity, 0);
 
@@ -140,6 +128,23 @@ public class PlayerMovement : MonoBehaviour
         return hasHit;
     }
 
+    private void AdjustVerticalVelocity()
+    {
+         if (CheckIsGrounded())
+        {
+            verticalVelocity = 0f;
+            additionalVelocity = Vector3.zero;
+        } else {
+            verticalVelocity += PlayerInfo.gravity * Time.fixedDeltaTime;
+        }
+
+        // Handle Jump
+        if (CheckIsGrounded() && jumpButton)
+        {
+            jumpAction();
+        }
+    }
+
     public void Vault()
     {
         Quaternion headYaw = Quaternion.Euler(0, rig.cameraGameObject.transform.eulerAngles.y, 0);
@@ -174,9 +179,20 @@ public class PlayerMovement : MonoBehaviour
         additionalVelocity = velocity;
     }
 
+    public void AddAdditionalVelocity(Vector3 velocity)
+    {
+        additionalVelocity += velocity;
+    }
+
     public void AddVerticalVelocity(float vel)
     {
         verticalVelocity += vel;
+    }
+
+    public void ResetVelocity()
+    {
+        verticalVelocity = 0f;
+        additionalVelocity = Vector3.zero;
     }
 
     public void MoveClimbingPlayer(Vector3 delta)

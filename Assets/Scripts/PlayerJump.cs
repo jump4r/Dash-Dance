@@ -24,4 +24,9 @@ public class PlayerJump : MonoBehaviour
         playerMovement.AddVerticalVelocity(PlayerInfo.jumpForce);
         playerVault.TryVault();
     }
+
+    public void WallrunJump()
+    {
+        // Get look direction & add an Additional Velocity vector in that direction
+    }
 }
